@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Static Template</title>
+    <style>
+            body {
+        "Open Sans",
+        open-sans,
+        Arial,
+        "Helvetica Neue",
+        sans-serif;
+      }
+      .form-group{
+        margin-top:10px;
+      }
+      .input-group-addon{
+        background-color:transparent;
+        border:none;
+        border-bottom:1px solid #ccc;
+        color:#aaa;
+      }
+      input[type=checkbox].checkbox {
+        width:20px;
+        margin-right:5px;
+        }
+      .form-control{
+        border:none;
+        border-bottom:1px solid #ccc;
+        box-shadow: rgba(0, 0, 0, 0.0745098) 0px 0px 0px inset;
+        font-size: 16px;
+          font-weight: 100;
+          color: #222;
+      }
+      .simple a {font-size:18px;color:#fe6a07;}
+      .simple a:hover{
+         text-decoration:none;
+         color: rgba(254, 106, 7, 0.7);
+      }
+      .simple .glyphicon {padding-left:5px;}
+      .chart-wrapper {
+        position: relative;
+      }
+
+      .chart-wrapper .payment {
+        position: absolute;
+        left: 148px;
+        top: 85px;
+        font-size: 28px;
+        font-weight: 400;
+        z-index: 999;
+      }
+
+      .chart-wrapper .payment-txt {
+        position: absolute;
+        left: 145px;
+        top: 68px;
+        font-size: 16px;
+        font-weight: 600;
+        z-index: 999;
+      }
+
+      .color-codes {
+        padding-left: 20%;
+      }
+
+      .color-codes li {
+        list-style: none;
+        clear: both;
+        padding: 5px;
+      }
+
+      .color-codes .color-code {
+        padding: 5px;
+        border-radius: 6px;
+        background-color: #fe6a07;
+        width: 24px;
+        height: 24px;
+        float: left;
+      }
+
+      .color-codes .color1 {}
+
+      .color-codes .color2 {
+        background-color: #FBCBAB
+      }
+
+      .color-codes .color3 {
+        background-color: #FF9248
+      }
+
+      .color-codes .color4 {
+        background-color: #C75E14
+      }
+
+      .color-codes .color5 {
+        background-color: #F7E6DA
+      }
+
+      .color-codes .labels {
+        padding-left: 5px;
+        color: #999;
+          font-size: 12px;
+      }
+
+      .color-codes .values {
+        font-weight: 600
+      }
+    </style>
+
+    <!-- Latest compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+      crossorigin="anonymous"
+    />
+
+    <!-- Optional theme -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+      integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+      crossorigin="anonymous"
+    />
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script
+      src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+      integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.5/angular.min.js"></script>
+    <script src="https://www.networkcapital.net/landingpages/scripts/chart.min.js"></script>
+    <script src="https://www.networkcapital.net/landingpages/scripts/angular-chart.js"></script>
+    <div ng-app="mortCalcApp">
+      <div ng-controller="DoughnutCtrl">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-9">
+              <h1>
+                {{title}}
+              </h1>
+              <!--<pre>{{user | json}}</pre>-->
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-9">
+              <p>
+                Use this calculator to estimate your monthly mortgage payment,
+                including taxes and insurance. Simply enter the price of the
+                home, your down payment, and details about the home loan to
+                calculate your payment breakdown, schedule, and more.
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="homePrice">Home price</label>
+                <div class="input-group">
+                  <span class="input-group-addon">
+                    $
+                  </span>
+
+                  <input
+                    type="text"
+                    class="form-control"
+                    ng-keyup="calculate('hprice')"
+                    ng-model="user.details.homePrice"
+                    name="homePrice"
+                    id="homePrice"
+                    maxlength="30"
+                  />
+                </div>
+              </div>
+              <div class="form-inline">
+                <div class="form-group">
+                  <label for="downPayment">Down payment</label>
+                  <div class="input-group">
+                    <span class="input-group-addon">
+                      $
+                    </span>
+                    <input
+                      type="text"
+                      style="width: 70%;"
+                      ng-keyup="calculate('dpayment')"
+                      class="form-control"
+                      ng-model="user.details.downPayment"
+                      name="downPayment"
+                      id="downPayment"
+                      maxlength="30"
+                    />
+
+                    <input
+                      type="text"
+                      style="width: 30%;"
+                      ng-keyup="calculate('dpercent')"
+                      class="form-control"
+                      ng-model="user.details.dpayPercent"
+                      name="dpayPercent"
+                      id="dpayPercent"
+                      maxlength="5"
+                    />
+                    <span class="input-group-addon">
+                      %
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="loanProgram">Loan program</label>
+                <select
+                  type="text"
+                  class="form-control"
+                  ng-change="calculate('lprogram')"
+                  ng-model="user.details.loanProgram"
+                  name="loanProgram"
+                  id="loanProgram"
+                  ng-pattern=""
+                  required
+                >
+                  <option value="30" ng-selected="true">30-year fixed</option>
+                  <option value="15">15-year fixed</option>
+                  <option value="5">5/1 ARM</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="interestRate">Interest rate</label>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    ng-keyup="calculate('rate')"
+                    ng-model="user.details.interestRate"
+                    name="interestRate"
+                    id="interestRate"
+                    maxlength="10"
+                  />
+                  <span class="input-group-addon">
+                    %
+                  </span>
+                </div>
+              </div>
+              <div ng-show="!simple">
+                <div class="form-inline">
+                  <div class="form-group">
+                    <input
+                      type="checkbox"
+                      ng-click="calculate()"
+                      class="form-control checkbox"
+                      ng-model="user.details.incTaxIns"
+                      name="showTaxes"
+                      id="incTaxIns"
+                    />
+                    <label for="incTaxIns">Include taxes/ins.</label>
+                  </div>
+                </div>
+                <div class="form-inline" ng-show="user.details.incTaxIns">
+                  <div class="form-group">
+                    <label for="taxes">Property tax</label>
+                    <div class="input-group">
+                      <span class="input-group-addon">
+                        $
+                      </span>
+                      <input
+                        type="text"
+                        style=""
+                        ng-keyup="calculate('ptax')"
+                        class="form-control"
+                        ng-model="user.details.taxes"
+                        name="taxes"
+                        id="taxes"
+                        maxlength="10"
+                      /><span class="input-group-addon">/year</span>
+
+                      <input
+                        type="text"
+                        style=""
+                        ng-keyup="calculate('ptaxPercent')"
+                        class="form-control"
+                        ng-model="user.details.taxPercent"
+                        name="taxPercent"
+                        id="taxPercent"
+                        maxlength="5"
+                      />
+                      <span class="input-group-addon">
+                        %
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group" ng-show="user.details.incTaxIns">
+                  <label for="homeInsurance">Home insurance</label>
+                  <div class="input-group">
+                    <span class="input-group-addon">
+                      $
+                    </span>
+                    <input
+                      type="text"
+                      ng-keyup="calculate()"
+                      class="form-control"
+                      ng-model="user.details.homeInsurance"
+                      name="homeInsurance"
+                      id="homeInsurance"
+                    />
+                    <span class="input-group-addon">
+                      /year
+                    </span>
+                  </div>
+                </div>
+                <div class="form-inline" ng-show="user.details.incTaxIns">
+                  <div class="form-group">
+                    <input
+                      type="checkbox"
+                      class="form-control checkbox"
+                      ng-click="calculate()"
+                      ng-model="user.details.incPMI"
+                      name="incPMI"
+                      id="incPMI"
+                    />
+                    <label for="incPMI">Include PMI.</label>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="hoaDues">HOA dues</label>
+                  <div class="input-group">
+                    <span class="input-group-addon">
+                      $
+                    </span>
+                    <input
+                      type="text"
+                      ng-keyup="calculate()"
+                      class="form-control"
+                      ng-model="user.details.hoaDues"
+                      name="hoaDues"
+                      id="hoaDues"
+                    />
+                    <span class="input-group-addon">
+                      /month
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="simple" ng-show="simple">
+                <a href="#" ng-click="simple = false"
+                  >Advanced<span class="glyphicon glyphicon-chevron-down"></span
+                ></a>
+              </div>
+              <div class="simple" ng-show="!simple">
+                <a href="#" ng-click="simple = true"
+                  >Simple<span class="glyphicon glyphicon-chevron-up"></span
+                ></a>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="chart-wrapper">
+                <span class="payment-txt">Your Payment</span>
+                <span class="payment"
+                  >{{user.details.yourPayment|currency:undefined:0}}</span
+                >
+                <canvas
+                  id="doughnut"
+                  chart-colors="colors"
+                  class="chart chart-doughnut"
+                  style="width: 400px; height: 200px;"
+                  height="200"
+                  width="400"
+                  chart-data="data"
+                  chart-dataset-override="datasetOverride"
+                  chart-options="options"
+                  chart-labels="labels"
+                ></canvas>
+                <ul class="color-codes">
+                  <li>
+                    <div class="color-code color1"></div>
+                    <span class="labels">{{labels[0]}}</span>:
+                    <span class="values">{{data[0]|currency:undefined:0}}</span>
+                  </li>
+                  <li>
+                    <div class="color-code color2"></div>
+                    <span class="labels">{{labels[1]}}</span>:
+                    <span class="values">{{data[1]|currency:undefined:0}}</span>
+                  </li>
+                  <li>
+                    <div class="color-code color3"></div>
+                    <span class="labels">{{labels[2]}}</span>:
+                    <span class="values">{{data[2]|currency:undefined:0}}</span>
+                  </li>
+                  <li>
+                    <div class="color-code color4"></div>
+                    <span class="labels">{{labels[3]}}</span>:
+                    <span class="values">{{data[3]|currency:undefined:0}}</span>
+                  </li>
+                  <li>
+                    <div class="color-code color5"></div>
+                    <span class="labels">{{labels[4]}}</span>:
+                    <span class="values">{{data[4]|currency:undefined:0}}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      angular
+        .module("mortCalcApp", ["chart.js"])
+        .config(function (ChartJsProvider) {
+          ChartJsProvider.setOptions({});
+          ChartJsProvider.setOptions("Doughnut", {
+            segmentShowStroke: true,
+            segmentStrokeColor: "#fff",
+            segmentStrokeWidth: 3,
+            percentageInnerCutout: 90,
+            animationEasing: "easeInOutCirc",
+            showTooltips: true,
+            tooltipCaretSize: 10,
+            tooltipXOffset: 10,
+            tooltipEvents: ["mousemove", "touchstart", "touchmove"],
+            customTooltips: false,
+            tooltipTitleFontSize: 14
+          });
+        })
+        .controller("DoughnutCtrl", function ($scope, $http, $filter, $attrs) {
+          $scope.title = "Mortgage calculator";
+          $scope.simple = true;
+          console.log($scope);
+          $scope.user = {
+            details: {}
+          };
+          $scope.user.details.homePrice = 300000;
+
+          $scope.user.details.downPayment = 60000;
+
+          $scope.user.details.interestRate = 3.406;
+          // $scope.user.details.interestRate = $filter('number')($scope.user.details.interestRate, 3);
+          $scope.user.details.dpayPercent = 20;
+          $scope.user.details.loanProgram = 30;
+          $scope.user.details.taxes = 3600;
+          $scope.user.details.incTaxIns = true;
+          $scope.user.details.taxPercent = 1.2;
+          $scope.user.details.homeInsurance = 800;
+          $scope.user.details.pmi = 0;
+          $scope.user.details.incPMI = true;
+          $scope.user.details.hoaDues = 0;
+          $scope.user.details.yourPayment = 0;
+          $scope.colors = [
+            "#fe6a07",
+            "#FBCBAB",
+            "#FF9248",
+            "#C75E14",
+            "#F7E6DA",
+            "#eeeeee"
+          ];
+          $scope.labels = ["P&I", "Taxes", "Insurance", "PMI", "HOA"];
+          $scope.data = [0, 0, 0, 0, 0];
+          $scope.datasetOverride = {
+            borderWidth: 4,
+            borderColor: "rgba(255,255,255,.9)"
+          };
+          $scope.options = { cutoutPercentage: 80, responsive: false };
+          $scope.interestRate = 3.488;
+          $scope.mortgageYears = 30;
+
+          $scope.calculate = function (name) {
+            if (name == "dpercent") {
+              $scope.user.details.downPayment =
+                ($scope.user.details.dpayPercent / 100) *
+                $scope.user.details.homePrice;
+            } else if (name == "hprice") {
+              $scope.user.details.downPayment =
+                ($scope.user.details.dpayPercent / 100) *
+                $scope.user.details.homePrice;
+            } else if (name == "dpayment") {
+              $scope.user.details.dpayPercent =
+                ($scope.user.details.downPayment /
+                  $scope.user.details.homePrice) *
+                100;
+            } else if (name == "ptax") {
+              $scope.user.details.taxPercent =
+                ($scope.user.details.taxes / $scope.user.details.homePrice) *
+                100;
+            } else if (name == "ptaxPercent") {
+              $scope.user.details.taxes =
+                ($scope.user.details.taxPercent / 100) *
+                $scope.user.details.homePrice;
+            }
+
+            if (name == "rate") {
+            } else {
+              $scope.getRates();
+            }
+
+            $scope.mortgageAmount =
+              parseFloat($scope.user.details.homePrice) -
+              $scope.user.details.downPayment;
+
+            var amt = $scope.mortgageAmount;
+            var yrs = $scope.user.details.loanProgram * 12;
+            var rte = $scope.user.details.interestRate / 1200;
+            var pmt = (rte + rte / (Math.pow(1 + rte, yrs) - 1)) * amt;
+            pmt = pmt * 100;
+            pmt = Math.round(pmt);
+            pmt = pmt / 100;
+            $scope.data[0] = pmt;
+            //console.log($scope.user.details.yourPayment);
+            if (!$scope.user.details.incTaxIns) {
+              $scope.data[1] = 0;
+              $scope.data[2] = 0;
+              $scope.data[3] = 0;
+            } else {
+              $scope.data[1] = $filter("number")(
+                $scope.user.details.taxes / 12,
+                0
+              );
+              $scope.data[2] = $filter("number")(
+                $scope.user.details.homeInsurance / 12,
+                0
+              );
+              //80: 0, 85: .0044, 90: .0059, 95: .0076, 100: .0098
+              //.007104
+              if (
+                $scope.user.details.incPMI &&
+                $scope.user.details.dpayPercent < 20
+              ) {
+                //ToDo: Add a service to fetch out real-time PMI rates.
+                $scope.data[3] = $filter("number")(
+                  ($scope.mortgageAmount * 0.0044) / 12,
+                  0
+                );
+              } else {
+                $scope.data[3] = 0;
+              }
+            }
+
+            $scope.data[4] = $filter("number")($scope.user.details.hoaDues, 0);
+            $scope.user.details.yourPayment =
+              $scope.data[0] * 1 +
+              $scope.data[1] * 1 +
+              $scope.data[2] * 1 +
+              $scope.data[3] * 1 +
+              $scope.data[4] * 1;
+          };
+
+          //ToDo: Add a service to fetch out real-time interest rates.
+          $scope.getRates = function () {
+            switch ($scope.user.details.loanProgram) {
+              case "15":
+                if ($scope.user.details.dpayPercent < 5) {
+                  scope.user.details.interestRate = 2.833;
+                } else if (
+                  $scope.user.details.dpayPercent >= 5 &&
+                  $scope.user.details.dpayPercent < 20
+                ) {
+                  $scope.user.details.interestRate = 2.611;
+                } else if (
+                  $scope.user.details.dpayPercent >= 20 &&
+                  $scope.user.details.dpayPercent < 34
+                ) {
+                  $scope.user.details.interestRate = 2.638;
+                } else if (
+                  $scope.user.details.dpayPercent >= 34 &&
+                  $scope.user.details.dpayPercent < 67
+                ) {
+                  $scope.user.details.interestRate = 2.727;
+                } else if (
+                  $scope.user.details.dpayPercent >= 67 &&
+                  $scope.user.details.dpayPercent < 100
+                ) {
+                  $scope.user.details.interestRate = 3.082;
+                }
+                break;
+              case "5":
+                if ($scope.user.details.dpayPercent < 5) {
+                  scope.user.details.interestRate = 2.588;
+                } else if (
+                  $scope.user.details.dpayPercent >= 5 &&
+                  $scope.user.details.dpayPercent < 20
+                ) {
+                  $scope.user.details.interestRate = 2.586;
+                } else if (
+                  $scope.user.details.dpayPercent >= 20 &&
+                  $scope.user.details.dpayPercent < 34
+                ) {
+                  $scope.user.details.interestRate = 2.588;
+                } else if (
+                  $scope.user.details.dpayPercent >= 34 &&
+                  $scope.user.details.dpayPercent < 67
+                ) {
+                  $scope.user.details.interestRate = 2.774;
+                } else if (
+                  $scope.user.details.dpayPercent >= 67 &&
+                  $scope.user.details.dpayPercent < 100
+                ) {
+                  $scope.user.details.interestRate = 3.099;
+                }
+                break;
+              default:
+                if ($scope.user.details.dpayPercent < 5) {
+                  scope.user.details.interestRate = 3.406;
+                } else if (
+                  $scope.user.details.dpayPercent >= 5 &&
+                  $scope.user.details.dpayPercent < 20
+                ) {
+                  $scope.user.details.interestRate = 3.36;
+                } else if (
+                  $scope.user.details.dpayPercent >= 20 &&
+                  $scope.user.details.dpayPercent < 34
+                ) {
+                  $scope.user.details.interestRate = 3.401;
+                } else if (
+                  $scope.user.details.dpayPercent >= 34 &&
+                  $scope.user.details.dpayPercent < 67
+                ) {
+                  $scope.user.details.interestRate = 3.489;
+                } else if (
+                  $scope.user.details.dpayPercent >= 67 &&
+                  $scope.user.details.dpayPercent < 100
+                ) {
+                  $scope.user.details.interestRate = 3.748;
+                }
+            }
+          };
+
+          $scope.calculate();
+        });
+    </script>
+  </body>
+</html>
